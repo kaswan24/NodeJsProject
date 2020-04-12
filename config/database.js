@@ -89,3 +89,7 @@ sequelize.sync().then(() => console.log('database synchronised')).catch(console.
 //     console.log('table deleted');
 // }).finally(() => { 
 // });
+
+exports = module.exports = {
+  Task, Notes
+}
