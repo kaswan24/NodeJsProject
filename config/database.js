@@ -90,6 +90,8 @@ sequelize.sync().then(() => console.log('database synchronised')).catch(console.
 // }).finally(() => { 
 // });
 
+
+
 exports = module.exports = {
   Task, Notes
 }
