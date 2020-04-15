@@ -18,7 +18,7 @@ const sequelize = new Sequelize({
 // });
 
 var Task = sequelize.define('Task', {
-    title: {type: DataTypes.STRING,primaryKey: true,},
+    title: {type: DataTypes.STRING,primaryKey: true,allowNull: false},
     description: {type: DataTypes.STRING, allowNull: true},
     due_date: {type: DataTypes.DATEONLY, allowNull: false},
     status: {type: DataTypes.STRING, defaultValue: 'incomplete', allowNull: true},
@@ -36,11 +36,11 @@ var Notes = sequelize.define('Notes', {
 // Notes.belongsTo(Task, {foreignKey: 'title', targetKey: 'title'});
 
 
-// We would use this code if table needs to be altered    
-// ---Task.sync({alter: true}).then(() => {
-//     console.log('New table created');
-//     }
-//     )---
+   
+Task.sync({alter: true}).then(() => {
+    console.log('New table created');
+    }
+    )
 
 
 // We would use this function to seed sample values
