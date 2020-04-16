@@ -31,9 +31,9 @@ var Notes = sequelize.define('Notes', {
     title: {type: DataTypes.STRING, allowNull: false}},
     {timestamps : false});
 
-//We would use this functions to create foreign and primary keys inside the table
-// Task.hasMany(Notes, {foreignKey: 'title', sourceKey: 'title'});
-// Notes.belongsTo(Task, {foreignKey: 'title', targetKey: 'title'});
+// We would use this functions to create foreign and primary keys inside the table
+Task.hasMany(Notes, {foreignKey: 'title', sourceKey: 'title'});
+Notes.belongsTo(Task, {foreignKey: 'title', targetKey: 'title'});
 
 
    

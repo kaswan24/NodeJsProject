@@ -1,5 +1,16 @@
-$(document).ready(() => {
+//This would set default data for edit form when button for edit clicked.
+function setFormData(Title,DueDate,Priority){
+  var elmnt = document.getElementById("button21");
+  elmnt.scrollIntoView();
+    document.getElementById("editInput1").defaultValue=Title;
+    document.getElementById("editInput2").defaultValue=DueDate;
+    document.getElementById("editSelect1").defaultValue=Priority;
 
+}
+
+//Initiates everything inside it on page load
+$(document).ready(() => {
+  
     var dp = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
     var month = dp.getMonth()+1;
     var day = dp.getDate();
@@ -8,45 +19,155 @@ $(document).ready(() => {
         (day<10 ? '0' : '') + day;
     document.getElementById("exampleFormControlInput2").defaultValue = output;
 
-   
+    var reloadComponent =null;
+
+    var sortType;
+
+      //This would load all tasks
        var refreshTasks = function(){
+        $("#accordionExample").empty();
         $.ajax({
             datatype: 'json',
             url: '/api/tasks',
             type: 'get',
-           
+            
             success: (data) => {
               var count = 0;
+              if(sortType == 1){
+              data.sort(function(a,b){
+                // Turn your strings into dates, and then subtract them
+                // to get a value that is either negative, positive, or zero.
+                return new Date(b.due_date) - new Date(a.due_date);
+              });
+            }
+            else if(sortType == 2){
+              data.sort(function(a,b){
+                // Turn your strings into dates, and then subtract them
+                // to get a value that is either negative, positive, or zero.
+                return new Date(a.due_date) - new Date(b.due_date);
+              });
+            }
+            else if(sortType == 3){
+              var sortOrder = ['High','Medium','Low'];   // Declare a array that defines the order of the elements to be sorted.
+              data.sort(
+              function(a, b){                              // Pass a function to the sort that takes 2 elements to compare
+              if(a.priority == b.priority){                    // If the elements both have the same `type`,
+              return a.title.localeCompare(b.title); // Compare the elements by `name`.
+              }else{                                   // Otherwise,
+              return sortOrder.indexOf(a.priority) - sortOrder.indexOf(b.priority); // Substract indexes, If element `a` comes first in the array, the returned value will be negative, resulting in it being sorted before `b`, and vice versa.
+        }
+    }
+);
+            }
+
+            else if(sortType == 4){
+              var sortOrder = ['incomplete','complete'];   // Declare a array that defines the order of the elements to be sorted.
+              data.sort(
+              function(a, b){                              // Pass a function to the sort that takes 2 elements to compare
+              if(a.status == b.status){                    // If the elements both have the same `type`,
+              return a.title.localeCompare(b.title); // Compare the elements by `name`.
+              }else{                                   // Otherwise,
+              return sortOrder.indexOf(a.status) - sortOrder.indexOf(b.status); // Substract indexes, If element `a` comes first in the array, the returned value will be negative, resulting in it being sorted before `b`, and vice versa.
+        }
+    }
+);
+            }            
+
                 data.forEach(element => {
                     count++;
-                    $('#left-column').append(
+                    $('#accordionExample').append(
                       
-                      '<div class="card">'+
+                      '<div class="card" style="text-align: center;">'+
                         '<div class="card-header" id="'+element.title+count+'">'+
                           '<h2 class="mb-0">'+
                             '<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#'+element.title+'" aria-expanded="true" aria-controls="'+element.title+'">'+
-                              element.title +
+                              '<h6> Title: '+element.title+'</h6>'+
+                              '<h6> Due-Date: '+element.due_date+'</h6>'+
+                              '<h6> Status: '+element.status+'</h6>'+
+                              '<h6> Description: '+element.description+'</h6>'+
+                              '<h6> Priority: '+element.priority+'</h6>'+
                             '</button>'+
                           '</h2>'+
                         '</div>'+
                         '<div id="'+element.title+'" class="collapse" aria-labelledby="'+element.title+count+'" data-parent="#accordionExample">'+
                           '<div class="card-body" id ="cardbody'+count+'">'+
+                          '<div class="btn-group" role="group" aria-label="Basic example">'+
+                          '<input type = "text" id= "'+element.title+'notesbox" style="height: 39px;" placeholder="enter Note"></input>'+
+                          '<button type="button" class="btn btn-info" id="'+element.title+'notesbutton">Add Notes</button>'+
+                          '<button type="button" class="btn btn-info" id="'+element.title+'editbutton">Edit Task</button>'+
+                          '</div>'+
                           '</div>'+
                         '</div>'+
                       '</div>'+
                       '</div>'
     
                     );
-                      notesCall(element.title,count)
+                    //This function would add notes to corresponding Task
+                    $(document).on('click','#'+element.title+'notesbutton', function() {
+                      var taskTitle = element.title;
+                      var taskNote = $('#'+element.title+'notesbox').val();
+                      $.ajax({
+                        datatype: 'json',
+                        url: '/api/tasks/'+taskTitle+'/notes',
+                        type: 'post',
+                        data: {title: taskTitle ,note: taskNote},
+                        success: function(data){
+                          console.log("successfully added Note ");
+                      }
+                    
+                      });
+                    var reloadPage = function(){location.reload(true);}
+                      reloadPage;
+                      reloadComponent = reloadPage;
+                     
+                    }); 
+                    //This function would edit the corresponding Task
+                    $(document).on('click','#'+element.title+'editbutton', function() {
+                      alert("Great now fill the updated Info on the right side")
+                      var taskTitle = element.title;
+                      document.getElementById("editInput1").disabled = true;
+                      var due_Date = element.due_date;
+                      var priority = element.priority;
+                      
+                      setFormData(taskTitle,due_Date,priority);
+
+                    }); 
+
+                    notesCall(element.title,count);
                 });
                 
             }
 
         });
-      }
 
+        
+      }             
 refreshTasks();
 
+// This would handle Task Updation
+$(document).on('click','#button21', function() {
+  var taskTitle = document.getElementById("editInput1").value;
+  var taskDate = document.getElementById("editInput2").value;
+  var taskPriority = document.getElementById("editSelect1").value;
+  var taskStatus = "incomplete";
+  if (document.getElementById('option1').checked) {
+    taskStatus = document.getElementById('option1').value;
+  }
+  $.ajax({
+    datatype: 'json',
+    url: '/api/tasks/'+taskTitle,
+    type: 'patch',
+    data: {status: taskStatus ,due_date: taskDate,priority: taskPriority},
+    success: function(data){
+      console.log("successfully edited Task ");
+  }
+
+  });
+  reloadComponent;
+  location.reload(true);
+}); 
+
+//This is used to display all notes under a task
     var notesCall = function(title,count){
 
       $.ajax({
@@ -57,10 +178,17 @@ refreshTasks();
         success: (data) => {
 
           data.forEach(element =>{
-            
+
             $('#cardbody'+count).append(
               
-              element.Note
+          '<div class="card border-success mb-3">'+
+          '<div class="card-header">Note</div>'+
+          '<div class="card-body text-success">'+
+          '<h5 class="card-title">'+
+          element.Note+
+          '</h5>'+
+          '</div>'+
+          '</div>'
 
             );
 
@@ -72,10 +200,13 @@ refreshTasks();
 
     }
 
-    $('#button1').click(() => {
+
+    //This would help Create a task
+    $('#button11').click(() => {
+
       if($('#exampleFormControlInput1').val()==""){return;}
     var createTasks = function(){
-
+      
       var newTitle = $('#exampleFormControlInput1').val()
       var newDescription = $('#exampleFormControlTextarea1').val()
       var newDue_date = $('#exampleFormControlInput2').val()
@@ -88,17 +219,62 @@ refreshTasks();
       
         data: {title: newTitle, due_date: newDue_date, description: newDescription, status: 'Incomplete', priority: newPriority},
         success: function(data){
-          alert("task with title--"+data.title+"---inserted succesfully");
+          console.log("successfully added data");
       }
       });
       
     }
     createTasks();
-    $('#left-column').empty();
-    refreshTasks();
+    location.reload(true);
+    
     });
 
+    //Sort by date descending
+    $('#sortDsc').click(() => {
+
+      sortType = 1;
+      $("#accordionExample").empty();
+      $("#accordionExample").html("Fetching Sorted Data......");
+      window.setTimeout(refreshTasks, 2000);
+      
+
+  });
+
+  //Sort by date ascending
+  $('#sortAsc').click(() => {
+
+    sortType = 2;
+    $("#accordionExample").empty();
+    $("#accordionExample").html("Fetching Sorted Data......");
+    window.setTimeout(refreshTasks, 2000);
+    
+
 });
+
+//Sort by priority
+$('#prioritySort').click(() => {
+
+  sortType = 3;
+  $("#accordionExample").empty();
+  $("#accordionExample").html("Fetching Sorted Data......");
+  window.setTimeout(refreshTasks, 2000);
+  
+
+});
+
+//Sort by status
+$('#statusSort').click(() => {
+
+  sortType = 4;
+  $("#accordionExample").empty();
+  $("#accordionExample").html("Fetching Sorted Data......");
+  window.setTimeout(refreshTasks, 2000);
+  
+
+});
+
+});
+
 
 
 
