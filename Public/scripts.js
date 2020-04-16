@@ -85,7 +85,7 @@ $(document).ready(() => {
             '<div class="card" style="text-align: center;">' +
             '<div class="card-header" id="header' + tempo +'">' +
             // '<h2 class="mb-0">' +
-            '<div class="card text-white bg-info mb-3" data-toggle="collapse" data-target="#collo'+tempo+'" aria-expanded="true" aria-controls="' + tempo + '">'+
+            '<div class="card text-white bg-info mb-3" data-toggle="collapse" data-target="#collo'+tempo+'"aria-expanded="true" aria-controls="' + tempo + '">'+
             '<div class="card-header">' + element.title +'  ||  Due--'+element.due_date+'</div>'+
             '<div class="card-body">'+
             '<p class="card-text">Description--'+ element.description +'</p>'+
