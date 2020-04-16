@@ -8,16 +8,17 @@ const sequelize = new Sequelize({
     storage: 'C:\\Users\\ankitkaswan\\Desktop\\NodeJsProject\\config\\ProjectDatabase'
   });
   
-//authenticate the connection
-// sequelize
-// .authenticate()
-// .then(function(err) {
-//   console.log('Connection has been established successfully.');
-// }, function (err) { 
-//   console.log('Unable to connect to the database:', err);
-// });
+
+sequelize
+.authenticate()
+.then(function(err) {
+  console.log('Connection has been established successfully.');
+}, function (err) { 
+  console.log('Unable to connect to the database:', err);
+});
 
 var Task = sequelize.define('Task', {
+    Id: {type: DataTypes.INTEGER, autoIncrement: true, },
     title: {type: DataTypes.STRING,primaryKey: true,allowNull: false},
     description: {type: DataTypes.STRING, allowNull: true},
     due_date: {type: DataTypes.DATEONLY, allowNull: false},
@@ -31,58 +32,20 @@ var Notes = sequelize.define('Notes', {
     title: {type: DataTypes.STRING, allowNull: false}},
     {timestamps : false});
 
-// We would use this functions to create foreign and primary keys inside the table
-Task.hasMany(Notes, {foreignKey: 'title', sourceKey: 'title'});
-Notes.belongsTo(Task, {foreignKey: 'title', targetKey: 'title'});
 
-
-   
-Task.sync({alter: true}).then(() => {
-    console.log('New table created');
-    }
-    )
-
-
-// We would use this function to seed sample values
-// ---Task.create({
-//     title: 'Game',
-//     description: 'play football',
-//     due_date: 12/12/2020,
-//     status: 'incomplete',
-//     priority: 'high'
-//   })
-//   .then(newTask => {
-//     console.log(`New task ${newTask.title}, with date ${newTask.due_date} has been created.`);
-//   });---
-
-
-// Use this function to get single row result
-// ---var task = sequelize.Task;
-// task.findOne({ where: { title: 'Game' } }).then(note => {
-//     console.log(note.get({ plain: true }));
-// }).finally(() => {
-//     sequelize.close();
-// });---
-
+// Task.hasMany(Notes, {foreignKey: 'title', sourceKey: 'title'});
+// Notes.belongsTo(Task, {foreignKey: 'title', targetKey: 'title'});
 
 sequelize.sync().then(() => console.log('database synchronised')).catch(console.error)
-
-// It would help update an existing row data
-// ---async function updateRow() {
-//     let id = await Task.update(
-//         { due_date: '2020-12-12' },
-//         { where: { title: 'Game' } });
-// }
-// updateRow();---
-
-
-//This function would help count the no of rows in table
-// ---async function countRows() {
-//     let n = await Task.count();
-//     console.log(`There are ${n} rows`);  
-// }
-// countRows();---
-
+   
+Task.sync({alter: true}).then(() => {
+    console.log('New Task table created');
+    }
+    )
+Notes.sync({alter: true}).then(() => {
+    console.log('New Notes table created');
+    }
+    )
 
 //Use this table to drop the table
 // Task.drop().then(() => {
