@@ -7,9 +7,7 @@ const app = express();
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
-var distDir = __dirname + "/public/";
-
-app.use('/', express.static(distDir));
+app.use('/', express.static('public'));
 app.use('/api', require('./Routes/api').route)
 
 app.listen(PORT, () => console.log('server running at port 5000'))
