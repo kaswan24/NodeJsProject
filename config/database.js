@@ -5,7 +5,7 @@ const { DataTypes } = require("sequelize");
 //create the connection with the database
 const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: 'C:\\Users\\ankitkaswan\\Desktop\\NodeJsProject\\config\\ProjectDatabase'
+    storage: 'config/ProjectDatabase'
   });
   
 
