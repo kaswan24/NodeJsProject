@@ -84,15 +84,23 @@ $(document).ready(() => {
 
             '<div class="card" style="text-align: center;">' +
             '<div class="card-header" id="header' + tempo +'">' +
-            '<h2 class="mb-0">' +
-            '<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collo'+tempo+'" aria-expanded="true" aria-controls="' + tempo + '">' +
-            '<h6> Title: ' + element.title + '</h6>' +
-            '<h6> Due-Date: ' + element.due_date + '</h6>' +
-            '<h6> Status: ' + element.status + '</h6>' +
-            '<h6> Description: ' + element.description + '</h6>' +
-            '<h6> Priority: ' + element.priority + '</h6>' +
-            '</button>' +
-            '</h2>' +
+            // '<h2 class="mb-0">' +
+            '<div class="card text-white bg-info mb-3" data-toggle="collapse" data-target="#collo'+tempo+'" aria-expanded="true" aria-controls="' + tempo + '">'+
+            '<div class="card-header">' + element.title +'  ||  Due--'+element.due_date+'</div>'+
+            '<div class="card-body">'+
+            '<p class="card-text">Description--'+ element.description +'</p>'+
+            '<p class="card-text">Priority--'+ element.priority +'</p>'+
+            '<p class="card-text">Status--'+ element.status +'</p>'+
+            '</div>'+
+            '</div>'+
+            // '<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collo'+tempo+'" aria-expanded="true" aria-controls="' + tempo + '">' +
+            // '<h6> Title: ' + element.title + '</h6>' +
+            // '<h6> Due-Date: ' + element.due_date + '</h6>' +
+            // '<h6> Status: ' + element.status + '</h6>' +
+            // '<h6> Description: ' + element.description + '</h6>' +
+            // '<h6> Priority: ' + element.priority + '</h6>' +
+            // '</button>' +
+            // '</h2>' +
             '</div>' +
             '<div id="collo'+tempo+'" class="collapse" aria-labelledby="header'+tempo+'" data-parent="#accordionExample">' +
             '<div class="card-body" id ="cardbody'+tempo+'">' +
