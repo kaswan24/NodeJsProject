@@ -18,7 +18,6 @@ sequelize
 });
 
 var Task = sequelize.define('Task', {
-    Id: {type: DataTypes.INTEGER, autoIncrement: true, },
     title: {type: DataTypes.STRING,primaryKey: true,allowNull: false},
     description: {type: DataTypes.STRING, allowNull: true},
     due_date: {type: DataTypes.DATEONLY, allowNull: false},
