@@ -7,7 +7,10 @@ const app = express();
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
-app.use(express.static(path.join(__dirname,'public'))); 
+process.env.PWD = process.cwd();
+app.use(express.static(path.join(process.env.PWD,'public')));
+
+// app.use(express.static(path.join(__dirname,'public'))); 
 
 app.use('/api', require('./Routes/api').route)
 
