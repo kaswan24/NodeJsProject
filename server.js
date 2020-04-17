@@ -8,7 +8,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 process.env.PWD = process.cwd();
-app.use(express.static(path.join(process.env.PWD,'public')));
+app.use(express.static(process.env.PWD));
 
 // app.use(express.static(path.join(__dirname,'public'))); 
 
